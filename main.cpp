@@ -1,13 +1,13 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
-#include "queue.h"
+// #include "queue.h"
 
 using namespace std;
 
-// ÃÊ°£´Ü ±¸µ¿ Å×½ºÆ®
-// ÁÖÀÇ: ¾Æ·¡ Á¤ÀÇ(Operation, Request)´Â ¿¹½ÃÀÏ »Ó
-// Å¥ÀÇ ItemÀº void*ÀÌ¹Ç·Î ¾ó¸¶µçÁö ´Þ¶óÁú ¼ö ÀÖÀ½
+// ï¿½Ê°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®
+// ï¿½ï¿½ï¿½ï¿½: ï¿½Æ·ï¿½ ï¿½ï¿½ï¿½ï¿½(Operation, Request)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+// Å¥ï¿½ï¿½ Itemï¿½ï¿½ void*ï¿½Ì¹Ç·ï¿½ ï¿½ó¸¶µï¿½ï¿½ï¿½ ï¿½Þ¶ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 #define REQUEST_PER_CLINET	10000
 
@@ -40,19 +40,19 @@ void client_func(Queue* queue, Request requests[], int n_request) {
 		}
 
 		if (reply.success) {
-			// ´Ü¼øÈ÷ ¸®ÅÏ¹ÞÀº Å° °ªÀ» ´õÇÔ(¾Æ¹« ÀÇ¹Ì ¾øÀ½)
+			// ï¿½Ü¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¹ï¿½ï¿½ï¿½ Å° ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½Æ¹ï¿½ ï¿½Ç¹ï¿½ ï¿½ï¿½ï¿½ï¿½)
 			sum_key += reply.item.key;
-			sum_value += (int)reply.item.value; // void*¿¡¼­ ´Ù½Ã int·Î º¯È¯
+			sum_value += (int)reply.item.value; // void*ï¿½ï¿½ï¿½ï¿½ ï¿½Ù½ï¿½ intï¿½ï¿½ ï¿½ï¿½È¯
 
-			// ¸®ÅÏ¹ÞÀº key, value °ª °ËÁõ
-			// ...»ý·«...
+			// ï¿½ï¿½ï¿½Ï¹ï¿½ï¿½ï¿½ key, value ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+			// ...ï¿½ï¿½ï¿½ï¿½...
 		}
 		else {
 			// noop
 		}
 	}
 
-	// ÁøÂ¥·Î ÇÊ¿äÇÑ °Ç Áö¿¬½Ã°£À» ÃøÁ¤ÇÏ´Â ÄÚµå
+	// ï¿½ï¿½Â¥ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Úµï¿½
 	//
 	// elapsed_time = finish_time - start_time;
 	// finish_time = ....
@@ -64,7 +64,7 @@ void client_func(Queue* queue, Request requests[], int n_request) {
 int main(void) {
 	srand((unsigned int)time(NULL));
 
-	// ¿öÅ©·Îµå »ý¼º(GETRANGE´Â ÆÐ½º)
+	// ï¿½ï¿½Å©ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½(GETRANGEï¿½ï¿½ ï¿½Ð½ï¿½)
 	Request requests[REQUEST_PER_CLINET];
 	for (int i = 0; i < REQUEST_PER_CLINET / 2; i++) {
 		requests[i].op = SET;
@@ -78,17 +78,17 @@ int main(void) {
 	Queue* queue = init();
 	//if (queue == NULL) return 0;
 
-	// ÀÏ´Ü ÇÑ °³ »ÓÀÎµ¥, ±×·¡µµ multi client¶ó°í °¡Á¤ÇÏ±â
+	// ï¿½Ï´ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½, ï¿½×·ï¿½ï¿½ï¿½ multi clientï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
 	thread client = thread(client_func, queue, requests, REQUEST_PER_CLINET);
 	client.join();
 
 	release(queue);
 
-	// ÀÇ¹Ì ¾ø´Â ÀÛ¾÷
+	// ï¿½Ç¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Û¾ï¿½
 	cout << "sum of returned keys = " << sum_key << endl;
 	cout << "sum of returned values = " << sum_value << endl;
 
-	// ÁøÂ¥·Î ÇÊ¿äÇÑ ÄÚµå
+	// ï¿½ï¿½Â¥ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½Úµï¿½
 	// total_average_response_time = total_response_time / n_cleint;
 	// printf("total average response time = ....
 	return 0;
