@@ -1,6 +1,6 @@
 #include <iostream>
 #include "qtype.h"
-
+#include "queue.h"
 
 Queue* init(void) {
 	return NULL;
