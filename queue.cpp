@@ -1,5 +1,5 @@
 #include <iostream>
-#include "queue.h"
+#include "qtype.h"
 
 
 Queue* init(void) {
@@ -13,7 +13,7 @@ void release(Queue* queue) {
 
 
 Node* nalloc(Item item) {
-	// Node »ý¼º, itemÀ¸·Î ÃÊ±âÈ­
+	// Node ï¿½ï¿½ï¿½ï¿½, itemï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
 	return NULL;
 }
 
