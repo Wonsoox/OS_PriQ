@@ -1,5 +1,5 @@
 #include <iostream>
-#include "qtype.h"
+
 #include "queue.h"
 
 Queue* init(void) {
@@ -9,7 +9,10 @@ Queue* init(void) {
 }
 
 void release(Queue* queue) {
-	return;
+    for (int i = 0; i < queue->size; ++i) {
+        delete[] static_cast<char*>(queue->heap[i].value);
+    }
+    delete queue;
 }
 
 
