@@ -27,7 +27,23 @@ void heapify_up(Queue* q, int idx) {
     }
 }
 
+void heapify_down(Queue* q, int idx) {
+    int smallest = idx;
+    while (true) {
+        int left = 2 * idx + 1;
+        int right = 2 * idx + 2;
 
+        if (left < q->size && q->heap[left].key < q->heap[smallest].key)
+            smallest = left;
+        if (right < q->size && q->heap[right].key < q->heap[smallest].key)
+            smallest = right;
+
+        if (smallest == idx) break;
+
+        std::swap(q->heap[smallest], q->heap[idx]);
+        idx = smallest;
+    }
+}
 
 
 
