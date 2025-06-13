@@ -17,8 +17,15 @@ void release(Queue* queue) {
 
 
 
-
-
+//아래는 힙구현 관련 함수가 들어올 예정 (down,up)
+void heapify_up(Queue* q, int idx) {
+    while (idx > 0) {
+        int parent = (idx - 1) / 2;
+        if (q->heap[parent].key <= q->heap[idx].key) break;
+        std::swap(q->heap[parent], q->heap[idx]);
+        idx = parent;
+    }
+}
 
 
 
