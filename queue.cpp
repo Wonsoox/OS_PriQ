@@ -4,7 +4,7 @@
 
 Queue* init(void) {
     Queue* q = new Queue();
-    q->head = nullptr;
+    q->size = 0;
     return q;
 }
 
