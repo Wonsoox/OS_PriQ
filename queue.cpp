@@ -134,33 +134,27 @@ Reply dequeue(Queue* queue) {
 }
 
 
-// Queue* range(Queue* queue, Key start, Key end) {
-//     Queue* result = init();
-//     std::lock_guard<std::mutex> lock(queue->mtx);
+Queue* range(Queue* queue, Key start, Key end) {
+    std::lock_guard<std::mutex> lock(queue->mtx);
 
-//     Node* cur = queue->head;
-//     Node** tail = &result->head;
+    Queue* result = new Queue();
+    result->size = 0;
 
-//     while (cur) {
-//         Key k = cur->item.key;
-//         if (k > end) break;
-
-//         if (k >= start) {
-//             Node* copy = new Node();
-//             copy->item.key = cur->item.key;
-//             copy->item.value_size = cur->item.value_size;
-//             if (cur->item.value_size > 0 && cur->item.value != nullptr) {
-//                 copy->item.value = new char[cur->item.value_size];
-//                 std::memcpy(copy->item.value, cur->item.value, cur->item.value_size);
-//             } else {
-//                 copy->item.value = nullptr;
-//             }
-//             copy->next = nullptr;
-//             *tail = copy;
-//             tail = &copy->next;
-//         }
-//         cur = cur->next;
-//     }
-
-//     return result;
-// }
+    for (int i = 0; i < queue->size; ++i) {
+        Key k = queue->heap[i].key;
+        if (k >= start && k <= end) {
+            Item& src = queue->heap[i];
+            Item& dst = result->heap[result->size];
+            dst.key = src.key;
+            dst.value_size = src.value_size;
+            dst.value = new char[src.value_size];
+            memcpy(dst.value, src.value, src.value_size);
+            result->size++;
+        }
+    }
+    // 힙 속성 보장 (필요시)
+    for (int i = result->size / 2 - 1; i >= 0; --i) {
+        heapify_down(result, i);
+    }
+    return result;
+}
