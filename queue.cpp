@@ -16,6 +16,15 @@ void release(Queue* queue) {
 }
 
 
+
+
+
+
+
+
+
+
+//이 아래의 함수들은 힙기반 우선순위 큐를 구현하는데에는 사용되지 않는다. 고로 맨아래로 위치를 변경한다.
 Node* nalloc(Item item) {
 	// Node ����, item���� �ʱ�ȭ
 	return NULL;
