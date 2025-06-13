@@ -108,28 +108,31 @@ Reply enqueue(Queue* queue, Item item) {
 }
 
 
-// Reply dequeue(Queue* queue) {
-//     std::lock_guard<std::mutex> lock(queue->mtx);
-//     Reply reply = {false, {}};
+Reply dequeue(Queue* queue) {
+    std::lock_guard<std::mutex> lock(queue->mtx);
+    Reply reply = { false, {0, nullptr, 0} };
 
-//     if (!queue->head) return reply;
+    if (queue->size == 0) return reply;
 
-//     Node* node = queue->head;
-//     queue->head = node->next;
+    Item& top = queue->heap[0];
 
-//     reply.success = true;
-//     reply.item.key = node->item.key;
-//     reply.item.value_size = node->item.value_size;
-//     if (node->item.value_size > 0 && node->item.value != nullptr) {
-//         reply.item.value = new char[node->item.value_size];
-//         std::memcpy(reply.item.value, node->item.value, node->item.value_size);
-//     } else {
-//         reply.item.value = nullptr;
-//     }
+    // 깊은 복사해서 반환
+    reply.success = true;
+    reply.item.key = top.key;
+    reply.item.value_size = top.value_size;
+    reply.item.value = new char[top.value_size];
+    memcpy(reply.item.value, top.value, top.value_size);
 
-//     nfree(node);
-//     return reply;
-// }
+    // 원본 value 메모리 해제
+    delete[] static_cast<char*>(top.value);
+
+    // 힙에서 제거
+    queue->heap[0] = queue->heap[--queue->size];
+    heapify_down(queue, 0);
+
+    return reply;
+}
+
 
 // Queue* range(Queue* queue, Key start, Key end) {
 //     Queue* result = init();
