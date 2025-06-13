@@ -72,7 +72,6 @@ Reply enqueue(Queue* queue, Item item) {
 
 
 
-// 최소 key 노드 제거
 Reply dequeue(Queue* queue) {
     std::lock_guard<std::mutex> lock(queue->mtx);
     Reply reply = {false, {}};
@@ -97,5 +96,32 @@ Reply dequeue(Queue* queue) {
 }
 
 Queue* range(Queue* queue, Key start, Key end) {
-	return NULL;
+    Queue* result = init();
+    std::lock_guard<std::mutex> lock(queue->mtx);
+
+    Node* cur = queue->head;
+    Node** tail = &result->head;
+
+    while (cur) {
+        Key k = cur->item.key;
+        if (k > end) break;
+
+        if (k >= start) {
+            Node* copy = new Node();
+            copy->item.key = cur->item.key;
+            copy->item.value_size = cur->item.value_size;
+            if (cur->item.value_size > 0 && cur->item.value != nullptr) {
+                copy->item.value = new char[cur->item.value_size];
+                std::memcpy(copy->item.value, cur->item.value, cur->item.value_size);
+            } else {
+                copy->item.value = nullptr;
+            }
+            copy->next = nullptr;
+            *tail = copy;
+            tail = &copy->next;
+        }
+        cur = cur->next;
+    }
+
+    return result;
 }
