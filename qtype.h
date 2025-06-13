@@ -1,5 +1,5 @@
 #pragma once
-#include <mutex>
+#include <mutex>  
 typedef int Key;
 typedef int Value;
 
@@ -16,7 +16,8 @@ typedef struct node_t {
 } Node;
 
 typedef struct {
-    Node* head;
+    int size;
+    Item heap[100000];
     std::mutex mtx;
 } Queue;
 
