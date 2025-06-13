@@ -72,7 +72,24 @@ Reply enqueue(Queue* queue, Item item) {
 
     if (queue->size >= MAX_SIZE) return reply;
 
-    
+    //동일 key판별 부분
+    for (int i = 0; i < queue->size; ++i) {
+        if (queue->heap[i].key == item.key) {
+            
+            delete[] static_cast<char*>(queue->heap[i].value);
+
+            
+            void* new_val = new char[item.value_size];
+            memcpy(new_val, item.value, item.value_size);
+
+            queue->heap[i].value = new_val;
+            queue->heap[i].value_size = item.value_size;
+
+            reply.success = true;
+            reply.item = queue->heap[i];
+            return reply;
+        }
+    }
 
     //깊은복사구현부분
     Item& new_item = queue->heap[queue->size];
