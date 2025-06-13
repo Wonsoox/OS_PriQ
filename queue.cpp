@@ -71,9 +71,29 @@ Reply enqueue(Queue* queue, Item item) {
 }
 
 
+
+// 최소 key 노드 제거
 Reply dequeue(Queue* queue) {
-	Reply reply = { false, NULL };
-	return reply;
+    std::lock_guard<std::mutex> lock(queue->mtx);
+    Reply reply = {false, {}};
+
+    if (!queue->head) return reply;
+
+    Node* node = queue->head;
+    queue->head = node->next;
+
+    reply.success = true;
+    reply.item.key = node->item.key;
+    reply.item.value_size = node->item.value_size;
+    if (node->item.value_size > 0 && node->item.value != nullptr) {
+        reply.item.value = new char[node->item.value_size];
+        std::memcpy(reply.item.value, node->item.value, node->item.value_size);
+    } else {
+        reply.item.value = nullptr;
+    }
+
+    nfree(node);
+    return reply;
 }
 
 Queue* range(Queue* queue, Key start, Key end) {
